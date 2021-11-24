@@ -5,16 +5,17 @@
     "main": "app.js",
     "private": true,
     "scripts": {
-        "build": "tsc -p tsconfig.json",
+        "build": "yarn run tsc",
         "test": "jest",
         "qa": "node -r dotenv/config --trace-warnings dist/app/app.js dotenv_config_path=.env.qa",
         "prod": "node -r dotenv/config --trace-warnings dist/app/app.js dotenv_config_path=.env.prod",
         "prestart": "yarn install && yarn build",
         "pretest": "yarn install && yarn build",
-        "start": "node --trace-warnings -r dotenv/config dist/app/app.js",
+        "start": "node --trace-warnings -r dotenv/config dist/app.js",
         "lint": "eslint ./src/app/**/*.ts --ext .ts",
         "format": "eslint ./src/app/**/*.ts --ext .ts --fix",
-        "watch": "tsc -p tsconfig.json -w"
+        "watch": "tsc -p tsconfig.json -w",
+        "tsc": "tsc -p tsconfig.json"
     },
     "repository": {
         "type": "git",
