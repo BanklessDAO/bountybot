@@ -22,6 +22,7 @@ export default class Bounty extends SlashCommand {
 		super(creator, {
 			name: 'bounty',
 			description: 'List, create, claim, delete, and mark bounties complete',
+			//TODO: make this dynamic
 			guildIDs: [discordServerIds.banklessDAO,
 				discordServerIds.discordBotGarage,
 				discordServerIds.bountyBoardBotServer],

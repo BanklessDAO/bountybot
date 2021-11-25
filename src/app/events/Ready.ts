@@ -18,6 +18,7 @@ export default class implements DiscordEvent {
 				Log.info(`Bountybot active for: ${guild.id}, ${guild.name}`);
 			});
 
+			//TODO: make this dynamic
 			if (client.guilds.cache.some((guild) => guild.id == discordServerIds.banklessDAO || guild.id == discordServerIds.discordBotGarage)) {
 				await MongoDbUtils.connect(constants.DB_NAME_BOUNTY_BOARD);
 			}
