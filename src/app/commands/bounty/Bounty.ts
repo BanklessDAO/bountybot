@@ -207,7 +207,7 @@ export default class Bounty extends SlashCommand {
 				ctx.guildID, ctx.options.submit['url'], ctx.options.submit['notes'],);
 				break;
 			default:
-				return ctx.send(`${ctx.user.mention} Please try again.`);
+				return ctx.send(`${ctx.user.mention} Command not recognized. Please try again.`);
 			}
 			this.handleCommandError(ctx, command);
 		} catch (e) {
