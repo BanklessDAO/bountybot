@@ -5,6 +5,7 @@ import constants from '../constants/constants';
 import { BountyCollection } from '../../types/bounty/BountyCollection';
 import Log from '../../utils/Log';
 import MongoDbUtils from '../../utils/MongoDbUtils';
+import ValidationError from '../../errors/ValidationError';
 
 export default async (guildMember: GuildMember, bountyId: string, guildID: string): Promise<any> => {
 	await BountyUtils.validateBountyId(guildMember, bountyId);
@@ -23,16 +24,18 @@ export const completeBountyForValidId = async (guildMember: GuildMember,
 		status: 'In-Review',
 	});
 
-	await BountyUtils.checkBountyExists(guildMember, dbBountyResult, bountyId);
+	if(dbBountyResult == null || dbBountyResult.status !== 'In-Review') {
+		Log.info(`${bountyId} bounty not found in db or user tried to complete a bounty not yet in-review`);
+		await guildMember.send({ content: `Sorry <@${guildMember.user.id}>, we're not able to find an in-review bounty with ID \`${bountyId}\`.` });
+		throw new ValidationError('Please try another bounty Id');
+	}
+	else {
+		Log.info(`found bounty ${bountyId} in db`);
+	}
 	
 	if (dbBountyResult.createdBy.discordId !== guildMember.user.id) {
-		Log.info(`${bountyId} bounty created by ${guildMember.user.tag} but it is created by ${dbBountyResult.createdBy.discordHandle}`);
+		Log.info(`${bountyId} attempting bounty complete by ${guildMember.user.tag} but it is created by ${dbBountyResult.createdBy.discordHandle}`);
 		return guildMember.send({ content: `Sorry <@${guildMember.user.id}>, bounty \`${bountyId}\` is created by someone else.` });
-	}
-
-	if (dbBountyResult.status !== 'In-Review') {
-		Log.info(`${bountyId} bounty not in review`);
-		return guildMember.send({ content: `Sorry <@${guildMember.user.id}>, bounty \`${bountyId}\` is not in review` });
 	}
 
 	const currentDate = (new Date()).toISOString();
