@@ -19,7 +19,11 @@ export default class implements DiscordEvent {
 			});
 
 			//TODO: make this dynamic
-			if (client.guilds.cache.some((guild) => guild.id == discordServerIds.banklessDAO || guild.id == discordServerIds.discordBotGarage)) {
+			if (client.guilds.cache.some((guild) => 
+			guild.id == discordServerIds.banklessDAO || 
+			guild.id == discordServerIds.discordBotGarage ||
+			guild.id == discordServerIds.bountyBoardBotServer ||
+			guild.id == discordServerIds.cityDAO)) {
 				await MongoDbUtils.connect(constants.DB_NAME_BOUNTY_BOARD);
 			}
 
