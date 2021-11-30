@@ -37,12 +37,14 @@ creator.on('commandRun', (command:SlashCommand, result: Promise<any>, ctx: Comma
 	LogUtils.logCommandEnd(ctx);
 });
 
+console.log(`__dirname: ${__dirname}`)
+
 // Register command handlers
 creator
 	.withServer(
 		new GatewayServer((handler) => client.ws.on(<WSEventType>'INTERACTION_CREATE', handler)),
 	)
-	.registerCommandsIn(path.join(__dirname, 'commands'))
+	.registerCommandsIn(path.join(__dirname, 'commands/bounty'))
 	.syncCommands();
 
 // Log client errors
