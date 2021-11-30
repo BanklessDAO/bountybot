@@ -25,7 +25,8 @@ export default class Bounty extends SlashCommand {
 			//TODO: make this dynamic
 			guildIDs: [discordServerIds.banklessDAO,
 				discordServerIds.discordBotGarage,
-				discordServerIds.bountyBoardBotServer],
+				discordServerIds.bountyBoardBotServer,
+				discordServerIds.cityDAO],
 			options: [
 				{
 					name: 'claim',
