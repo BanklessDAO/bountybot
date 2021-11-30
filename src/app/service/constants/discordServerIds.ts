@@ -3,5 +3,6 @@ export default Object.freeze({
 	discordBotGarage: '851552281249972254',
 	slinkyPotatoServer: '850840267082563596',
 	bountyBoardBotServer: '905250069463326740',
-	cityDAO: '860356969521217536'
+	cityDAO: '860356969521217536',
+	lifeTheLifeDAO: '721358849034158104'
 });

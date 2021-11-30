@@ -123,7 +123,8 @@ const ServiceUtils = {
 		return guild.id == discordServerIds.banklessDAO ||
 		guild.id == discordServerIds.discordBotGarage ||
 		guild.id == discordServerIds.bountyBoardBotServer ||
-		guild.id == discordServerIds.cityDAO;
+		guild.id == discordServerIds.cityDAO ||
+		guild.id == discordServerIds.lifeTheLifeDAO;
 	},
 	
 	async tryDMUser(guildMember: GuildMember, message: string): Promise<any> {
