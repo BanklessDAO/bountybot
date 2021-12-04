@@ -1,4 +1,4 @@
-import { GuildMember, Message, TextChannel } from 'discord.js';
+import { AwaitMessagesOptions, DMChannel, GuildMember, Message, TextChannel } from 'discord.js';
 import { BountyReward } from '../types/bounty/BountyReward';
 import channelIds from '../service/constants/channelIds';
 import ValidationError from '../errors/ValidationError';
@@ -191,6 +191,22 @@ const BountyUtils = {
 	getDateFromISOString(date: string): Date {
 		return new Date(date);
 	},
+
+	async awaitUserDM(dmChannel: DMChannel, replyOptions: AwaitMessagesOptions): Promise<string> {
+		const message = (await dmChannel.awaitMessages(replyOptions)).first();
+		const messageText = message.content;
+
+		if(message.author.bot) {
+			throw new ValidationError(
+				`Detected bot response to last message!\n` +
+				`Currently, you can only run one Bounty create command at once.\n` + 
+				`Be sure to check your DMs for any messages from Bountybot.\n` +
+				`Please reach out to your favorite Bounty Board representative with any questions.\n`
+			);
+		}
+
+		return messageText;
+	}
 };
 
 export default BountyUtils;

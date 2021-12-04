@@ -30,8 +30,6 @@ DISCORD_OWNER_ID=<taken from discord app in TEST mode>
 MONGODB_USERNAME=<mongodb user name>
 MONGODB_PASS=<mongodb user password>
 MONGODB_CLUSTER=<mongodb cluster url>
-NOTION_TOKEN=<generated from notion integrations page>
-FAQS_PAGE_ID=<personal FAQS page>
 DISCORD_ROLE_GUEST_PASS=848369657281773599
 DISCORD_ROLE_LEVEL_2=839005084016312360
 NOTION_GUEST_PASS_DATABASE_ID=15fae33760724cf7b696a981d53e50cb
@@ -74,13 +72,7 @@ Once created, the url should be passed which has the username:password combinati
 
 If using Docker, a local instance of mongo is included when using `docker-compose`
 
-### 6. Create Notion Integration
-
-[https://developers.notion.com/docs/getting-started](https://developers.notion.com/docs/getting-started)
-
-![](images/notion_integration.png)
-
-### 7. Run application
+### 6. Run application
 
 If not using docker:
 ```bash

@@ -62,20 +62,20 @@ export default async (guildMember: GuildMember, params: BountyCreateNew, guildID
 		errors: ['time'],
 	};
 
-	const summary = (await dmChannel.awaitMessages(replyOptions)).first().content;
+	const summary = await BountyUtils.awaitUserDM(dmChannel, replyOptions);;
 	await BountyUtils.validateSummary(guildMember, summary);
 	params.summary = summary;
 
 	await guildMember.send({ content: 'Awesome! Now what is absolutely required for the bounty to be complete?' });
 
-	const criteria = (await dmChannel.awaitMessages(replyOptions)).first().content;
+	const criteria = await BountyUtils.awaitUserDM(dmChannel, replyOptions);;
 	await BountyUtils.validateCriteria(guildMember, criteria);
 	params.criteria = criteria;
 
 	if (params.copies > 1) {
 		const totalReward = params.reward.amount * params.copies;
 		await guildMember.send({ content: `Are you sure you want to publish bounties with a \`total\` reward of \`${totalReward} ${params.reward.currencySymbol}\`? (yes/no)` });
-		const amountConfirmation: string = (await dmChannel.awaitMessages(replyOptions)).first().content;
+		const amountConfirmation: string = await BountyUtils.awaitUserDM(dmChannel, replyOptions);
 		if (!(amountConfirmation == 'yes' || amountConfirmation == 'YES' || amountConfirmation == 'Y' || amountConfirmation == 'Yes')) {
 			return guildMember.send({ content: 'Ok no problem, bounty deleted.' });
 		}
@@ -84,17 +84,23 @@ export default async (guildMember: GuildMember, params: BountyCreateNew, guildID
 	let convertedDueDateFromMessage: Date;
 	do {
 		await guildMember.send({ content: 'Please enter `UTC` date in format `yyyy-mm-dd`, i.e 2021-08-15`? (no to exit)' });
-		const dueAtMessage = (await dmChannel.awaitMessages(replyOptions)).first().content;
-		if (dueAtMessage !== 'no') {
+		const dueAtMessageText = await BountyUtils.awaitUserDM(dmChannel, replyOptions);
+
+		if (dueAtMessageText !== 'no') {
 			try {
-				convertedDueDateFromMessage = BountyUtils.validateDate(guildMember, dueAtMessage);
+				convertedDueDateFromMessage = BountyUtils.validateDate(guildMember, dueAtMessageText);
 			} catch(e) {
 				Log.warn('user entered invalid date for bounty');
 				await guildMember.send({ content: 'Please try `UTC` date in format `yyyy-mm-dd`, i.e 2021-08-15' });
 			}
-		} else if (dueAtMessage === 'no') {
+		} else if (dueAtMessageText === 'no') {
 			convertedDueDateFromMessage = null;
 			break;
+		}
+
+		if(convertedDueDateFromMessage.toString() === 'Invalid Date') {
+			Log.warn('user entered invalid date for bounty');
+			await guildMember.send({ content: 'Please try `UTC` date in format `yyyy-mm-dd`, i.e 2021-08-15' });
 		}
 	} while (convertedDueDateFromMessage.toString() === 'Invalid Date');
 	params.dueAt = convertedDueDateFromMessage ? convertedDueDateFromMessage : BountyUtils.getDateFromISOString(constants.BOUNTY_BOARD_END_OF_SEASON_DATE);
