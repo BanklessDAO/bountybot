@@ -198,7 +198,7 @@ const BountyUtils = {
 
 		if(message.author.bot) {
 			throw new ValidationError(
-				`Detected bot response to last message!\n` +
+				`Detected bot response to last message! The previous bounty has been discarded.\n` +
 				`Currently, you can only run one Bounty create command at once.\n` + 
 				`Be sure to check your DMs for any messages from Bountybot.\n` +
 				`Please reach out to your favorite Bounty Board representative with any questions.\n`
