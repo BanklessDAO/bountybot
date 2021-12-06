@@ -32,6 +32,16 @@ const ServiceUtils = {
 		return await guild.members.fetch(user.id);
 	},
 
+	async getGuildMemberFromUserId(userId: string, guildID: string): Promise<GuildMember> {
+		const guild = await client.guilds.fetch(guildID);
+		return await guild.members.fetch(userId);
+	},
+
+	async getRoleFromRoleId(roleId: string, guildID: string): Promise<Role> {
+		const guild = await client.guilds.fetch(guildID);
+		return await guild.roles.fetch(roleId);
+	},
+
 	async getMembersWithRoles(guild: Guild, roles: string[]): Promise<Collection<Snowflake, GuildMember>> {
 		const guildMembers = await guild.members.fetch();
 		return guildMembers.filter(member => {

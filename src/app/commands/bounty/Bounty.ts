@@ -22,7 +22,7 @@ export default class Bounty extends SlashCommand {
 		super(creator, {
 			name: 'bounty',
 			description: 'List, create, claim, delete, and mark bounties complete',
-			//TODO: make this dynamic
+			//TODO: make this dynamic?
 			guildIDs: [discordServerIds.banklessDAO,
 				discordServerIds.discordBotGarage,
 				discordServerIds.bountyBoardBotServer,
@@ -76,6 +76,18 @@ export default class Bounty extends SlashCommand {
 							name: 'copies',
 							type: CommandOptionType.INTEGER,
 							description: 'How many bounties should be published? (level 3+, max 100)',
+							required: false,
+						},
+						{
+							name: 'role',
+							type: CommandOptionType.ROLE,
+							description: 'What role(s) would you like to restrict this bounty to?',
+							required: false,
+						},
+						{
+							name: 'user',
+							type: CommandOptionType.USER,
+							description: 'What user(s) would you like to restrict this bounty to?',
 							required: false,
 						},
 					],
@@ -202,7 +214,7 @@ export default class Bounty extends SlashCommand {
 				command = DeleteBounty(guildMember, ctx.options.delete['bounty-id'], ctx.guildID);
 				break;
 			case 'list':
-				command = ListBounty(guildMember, ctx.options.list['list-type']);
+				command = ListBounty(guildMember, ctx.options.list['list-type'], ctx.guildID);
 				break;
 			case 'submit':
 				command = SubmitBounty(guildMember, ctx.options.submit['bounty-id'], 
@@ -246,6 +258,8 @@ export default class Bounty extends SlashCommand {
 				amountWithoutScale: reward.replace('.', ''),
 			},
 			copies: copies,
+			users: [ctxOptions.user],
+			roles: [ctxOptions.role],
 		};
 	}
 }

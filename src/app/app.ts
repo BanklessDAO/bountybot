@@ -37,8 +37,6 @@ creator.on('commandRun', (command:SlashCommand, result: Promise<any>, ctx: Comma
 	LogUtils.logCommandEnd(ctx);
 });
 
-console.log(`__dirname: ${__dirname}`)
-
 // Register command handlers
 creator
 	.withServer(
