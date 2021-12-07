@@ -67,7 +67,7 @@ export const addPublishReactions = (message: Message): void => {
 	message.reactions.removeAll();
 	message.react('🏴');
 	message.react('🔄');
-	message.react('📝');
+	//message.react('📝');
 	message.react('❌');
 };
 
@@ -90,8 +90,11 @@ export const generateEmbedMessage = async (dbBounty: BountyCollection, newStatus
 			{ name: 'Created by', value: dbBounty.createdBy.discordHandle, inline: true },
 		],
 		timestamp: new Date().getTime(),
+		// footer: {
+		// 	text: '🏴 - claim | 🔄 - refresh | 📝 - edit | ❌ - delete',
+		// },
 		footer: {
-			text: '🏴 - claim | 🔄 - refresh | 📝 - edit | ❌ - delete',
+			text: '🏴 - claim | 🔄 - refresh | ❌ - delete',
 		},
 	};
 
