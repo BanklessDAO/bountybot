@@ -20,10 +20,11 @@ the [discord.js guide](https://discordjs.guide/#before-you-begin);
 
 ### 1. Create environment file
 
-Please create a `.env` with the keys below
+Refer to .env.template
+Below is a description of these env vars:
 
 ```
-DISCORD_BOT_TOKEN=<taken from discord bot applciation page>
+DISCORD_BOT_TOKEN=<taken from discord bot application page>
 DISCORD_BOT_PUBLIC_KEY=<taken from discord application PUBLIC KEY>
 DISCORD_BOT_APPLICATION_ID=<taken from discord application APPLICATION ID>
 DISCORD_OWNER_ID=<taken from discord app in TEST mode>
@@ -34,12 +35,15 @@ DISCORD_ROLE_GUEST_PASS=848369657281773599
 DISCORD_ROLE_LEVEL_2=839005084016312360
 NOTION_GUEST_PASS_DATABASE_ID=15fae33760724cf7b696a981d53e50cb
 DISCORD_SERVER_ID=834499078434979890
+LOGDNA_APP_NAME=<you choose, but it's the application that will show up in LOGDNA>
+LOGDNA_DEFAULT_LEVEL=debug
+LOGDNA_TOKEN=<Ingestion key from the Settings > Organization > API console of LOGDNA>
 ```
 
 ### 2. Generate bot token
 
 [https://discordjs.guide/preparations/setting-up-a-bot-application.html](https://discordjs.guide/preparations/setting-up-a-bot-application.html)
-Create your own discord application and then create your own bot API key.
+Create your own discord application and then create a bot in that application to get your own bot API key.
 
 Retrieve the App's client ID
 ![](images/create_app.png)
@@ -71,6 +75,13 @@ Once created, the url should be passed which has the username:password combinati
 ![](images/mongodb_url.png)
 
 If using Docker, a local instance of mongo is included when using `docker-compose`
+
+### 6. Create LogDNA Account
+
+Start a free trial.
+If you do not mind about retaining logs (not necessary for local development), the service will always stay free.
+On the right most panel go to Settings > Organization > API Keys
+Copy an ingestion key. Set that value as LOGDNA_TOKEN in your .env
 
 ### 6. Run application
 
