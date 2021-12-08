@@ -58,6 +58,6 @@ These are the major branches
 ## PR raised to main
 
 -   production release
--   have a call with devs, SCOAP Squad, and relevant guild reps to make sure everything is smooth
+-   have a call with devs and relevant guild reps to make sure everything is smooth
 
 https://nvie.com/posts/a-successful-git-branching-model/

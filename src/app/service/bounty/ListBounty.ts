@@ -9,7 +9,7 @@ import MongoDbUtils from '../../utils/MongoDbUtils';
 
 const DB_RECORD_LIMIT = 10;
 
-export default async (guildMember: GuildMember, listType: string): Promise<any> => {
+export default async (guildMember: GuildMember, listType: string, guildID: string): Promise<any> => {
 	await BountyUtils.validateBountyType(guildMember, listType);
 
 	let dbRecords: Cursor;
@@ -39,14 +39,14 @@ export default async (guildMember: GuildMember, listType: string): Promise<any> 
 	if (!await dbRecords.hasNext()) {
 		return guildMember.send({ content: 'We couldn\'t find any bounties!' });
 	}
-	return sendMultipleMessages(guildMember, dbRecords);
+	return sendMultipleMessages(guildMember, dbRecords, guildID);
 };
 
-const sendMultipleMessages = async (guildMember: GuildMember, dbRecords: Cursor): Promise<any> => {
+const sendMultipleMessages = async (guildMember: GuildMember, dbRecords: Cursor, guildID: string): Promise<any> => {
 	const listOfBounties = [];
 	while (listOfBounties.length < 10 && await dbRecords.hasNext()) {
 		const record: BountyCollection = await dbRecords.next();
-		const messageOptions: MessageEmbedOptions = generateEmbedMessage(record, record.status);
+		const messageOptions: MessageEmbedOptions = await generateEmbedMessage(record, record.status, guildID);
 		listOfBounties.push(messageOptions);
 	}
 	await (guildMember.send({ embeds: listOfBounties }));

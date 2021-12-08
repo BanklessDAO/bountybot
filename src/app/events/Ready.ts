@@ -11,19 +11,20 @@ export default class implements DiscordEvent {
 
 	async execute(client: Client): Promise<any> {
 		try {
-			Log.info(`Gotta catch em all! - Bountybot (ready for service)`);
+			Log.info('Gotta catch em all! - Bountybot (ready for service)');
 			
 			client.user.setActivity(process.env.DISCORD_BOT_ACTIVITY);
 			client.guilds.cache.forEach((guild: Guild) => {
 				Log.info(`Bountybot active for: ${guild.id}, ${guild.name}`);
 			});
 
-			//TODO: make this dynamic
-			if (client.guilds.cache.some((guild) => 
-			guild.id == discordServerIds.banklessDAO || 
-			guild.id == discordServerIds.discordBotGarage ||
-			guild.id == discordServerIds.bountyBoardBotServer ||
-			guild.id == discordServerIds.cityDAO)) {
+			// TODO: make this dynamic
+			if (client.guilds.cache.some((guild) =>
+				guild.id == discordServerIds.banklessDAO ||
+				guild.id == discordServerIds.discordBotGarage ||
+				guild.id == discordServerIds.bountyBoardBotServer ||
+				guild.id == discordServerIds.cityDAO ||
+				guild.id == discordServerIds.lifeTheLifeDAO)) {
 				await MongoDbUtils.connect(constants.DB_NAME_BOUNTY_BOARD);
 			}
 

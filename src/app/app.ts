@@ -42,7 +42,7 @@ creator
 	.withServer(
 		new GatewayServer((handler) => client.ws.on(<WSEventType>'INTERACTION_CREATE', handler)),
 	)
-	.registerCommandsIn(path.join(__dirname, 'commands'))
+	.registerCommandsIn(path.join(__dirname, 'commands/bounty'))
 	.syncCommands();
 
 // Log client errors

@@ -3,6 +3,7 @@ import { AwaitMessagesOptions, DMChannel, GuildMember, Message, MessageOptions, 
 import { finalizeBounty } from './PublishBounty';
 import { deleteBountyForValidId } from '../DeleteBounty';
 import { BountyCreateNew } from '../../../types/bounty/BountyCreateNew';
+import { BountyCollection} from '../../../types/bounty/BountyCollection';
 import ServiceUtils from '../../../utils/ServiceUtils';
 import envUrls from '../../constants/envUrls';
 import UpdateEditKeyBounty from '../UpdateEditKeyBounty';
@@ -119,7 +120,7 @@ export default async (guildMember: GuildMember, params: BountyCreateNew, guildID
 	Log.info(`user ${guildMember.user.tag} inserted bounty into db`);
 	const listOfBountyIds = Object.values(dbInsertResult.insertedIds).map(String);
 	const newBounty = listOfPrepBounties[0];
-	const messageOptions: MessageOptions = {
+	let messageOptions: MessageOptions = {
 		embeds: [{
 			title: newBounty.title,
 			url: (envUrls.BOUNTY_BOARD_URL + listOfBountyIds[0]),
@@ -137,17 +138,33 @@ export default async (guildMember: GuildMember, params: BountyCreateNew, guildID
 				{ name: 'Created by', value: newBounty.createdBy.discordHandle.toString(), inline: true },
 			],
 			timestamp: new Date().getTime(),
+			//TODO: fix edit functionality
+			// footer: {
+			// 	text: '👍 - publish | 📝 - edit | ❌ - delete | Please reply within 60 minutes',
+			// },
 			footer: {
-				text: '👍 - publish | 📝 - edit | ❌ - delete | Please reply within 60 minutes',
+				text: '👍 - publish | ❌ - delete | Please reply within 60 minutes',
 			},
 		}],
 	};
+
+	if (newBounty.users) {
+		const guildMember = await ServiceUtils.getGuildMemberFromUserId(newBounty.users[0], guildID);
+		messageOptions.embeds[0].fields.push(
+			{ name: 'Users for', value: guildMember.user.tag, inline: false })
+	}
+
+	if (newBounty.roles) {
+		const role = await ServiceUtils.getRoleFromRoleId(newBounty.roles[0], guildID);
+		messageOptions.embeds[0].fields.push({ name: 'Roles for', value: role.name, inline: false })
+	}
 
 	await guildMember.send('Thank you! Does this look right?');
 	const message: Message = await guildMember.send(messageOptions);
 
 	await message.react('👍');
-	await message.react('📝');
+	//TODO: fix edit functionality
+	//await message.react('📝');
 	await message.react('❌');
 
 	return handleBountyReaction(message, guildMember, guildID, listOfBountyIds);
@@ -157,6 +174,7 @@ export const generateBountyRecord = (bountyParams: BountyCreateNew, guildMember:
 	const currentDate = (new Date()).toISOString();
 	return {
 		customerId: bountyParams.customerId,
+		//TODO can we migrate from customer_id?
 		customer_id: bountyParams.customer_id,
 		season: new Int32(Number(process.env.DAO_CURRENT_SEASON)),
 		title: bountyParams.title,
@@ -181,6 +199,8 @@ export const generateBountyRecord = (bountyParams: BountyCreateNew, guildMember:
 		],
 		status: 'Draft',
 		dueAt: bountyParams.dueAt.toISOString(),
+		users: bountyParams.users ? bountyParams.users : null,
+		roles: bountyParams.roles ? bountyParams.roles : null
 	};
 };
 

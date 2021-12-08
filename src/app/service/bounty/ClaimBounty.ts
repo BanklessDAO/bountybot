@@ -6,6 +6,7 @@ import envUrls from '../constants/envUrls';
 import { BountyCollection } from '../../types/bounty/BountyCollection';
 import Log from '../../utils/Log';
 import MongoDbUtils from '../../utils/MongoDbUtils';
+import ServiceUtils from '../../utils/ServiceUtils';
 
 export default async (guildMember: GuildMember, bountyId: string, guildID: string): Promise<any> => {
 	await BountyUtils.validateBountyId(guildMember, bountyId);
@@ -32,6 +33,24 @@ export const claimBountyForValidId = async (guildMember: GuildMember,
 	if (dbBountyResult.status != 'Open') {
 		Log.info(`${bountyId} bounty is not open`);
 		return guildMember.send({ content: `Sorry bounty is not Open. ${envUrls.BOUNTY_BOARD_URL}${bountyId}` });
+	}
+
+	let isAllowlistedUser = true;
+	let isAllowlistedRole = true;
+
+	if (dbBountyResult.users) {
+		isAllowlistedUser = dbBountyResult.users.indexOf(guildMember.user.id) > -1;
+	}
+
+	if (dbBountyResult.roles) {
+		if (! ServiceUtils.hasSomeRole(guildMember, dbBountyResult.roles)) {
+			isAllowlistedRole = false;
+		}
+	}
+
+	if(! (isAllowlistedUser || isAllowlistedRole)) {
+		Log.info(`Bounty ${bountyId} tried to be claimed by ${guildMember.user.id}, who was not an allowlisted user or role`);
+		return guildMember.send({ content: `The creator of this bounty did not allowlist you to claim this bounty. ${envUrls.BOUNTY_BOARD_URL}${bountyId}` });
 	}
 
 	const currentDate = (new Date()).toISOString();
@@ -74,10 +93,13 @@ export const claimBountyMessage = async (db: Db, guildMember: GuildMember,
 	message = await BountyUtils.getBountyMessage(db, guildMember, bountyMessageId, guildID, message);
 
 	const embedMessage: MessageEmbed = message.embeds[0];
+	//TODO: remove hardcoded `3` value
 	embedMessage.fields[3].value = 'In-Progress';
 	embedMessage.setColor('#d39e00');
 	embedMessage.addField('Claimed by', guildMember.user.tag, true);
-	embedMessage.setFooter('📮 - submit | 🔄 - refresh | 🆘 - help');
+	//TODO: fix SOS
+	embedMessage.setFooter('📮 - submit | 🔄 - refresh');
+	//embedMessage.setFooter('📮 - submit | 🔄 - refresh | 🆘 - help');
 	await message.edit({ embeds: [embedMessage] });
 	await addClaimReactions(message);
 };
@@ -86,5 +108,6 @@ export const addClaimReactions = async (message: Message): Promise<any> => {
 	await message.reactions.removeAll();
 	await message.react('📮');
 	await message.react('🔄');
-	await message.react('🆘');
+	//TODO: fix SOS
+	//await message.react('🆘');
 };
