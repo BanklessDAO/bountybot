@@ -6,8 +6,8 @@ These are the major branches
 
 -   contains production ready code
 -   code that users are using
--   possible DAO impact if something is wrong
--   any new commit causes auto deployment
+-   DAO impact if something is wrong
+-   any new commit causes auto deployment to production
 
 2. develop
 

@@ -14,23 +14,23 @@ export default async (guildMember: GuildMember, listType: string, guildID: strin
 
 	let dbRecords: Cursor;
 	const db: Db = await MongoDbUtils.connect(constants.DB_NAME_BOUNTY_BOARD);
-	const dbCollection = db.collection(constants.DB_COLLECTION_BOUNTIES);
+	const dbBounty = db.collection(constants.DB_COLLECTION_BOUNTIES);
 
 	switch (listType) {
 	case 'CREATED_BY_ME':
-		dbRecords = dbCollection.find({ 'createdBy.discordId': guildMember.user.id, status: { $ne: 'Deleted' } }).limit(DB_RECORD_LIMIT);
+		dbRecords = dbBounty.find({ 'createdBy.discordId': guildMember.user.id, status: { $ne: 'Deleted' }, 'customerId': guildID }).limit(DB_RECORD_LIMIT);
 		break;
 	case 'CLAIMED_BY_ME':
-		dbRecords = dbCollection.find({ 'claimedBy.discordId': guildMember.user.id, status: { $ne: 'Deleted' } }).limit(DB_RECORD_LIMIT);
+		dbRecords = dbBounty.find({ 'claimedBy.discordId': guildMember.user.id, status: { $ne: 'Deleted' }, 'customerId': guildID }).limit(DB_RECORD_LIMIT);
 		break;
 	case 'DRAFT_BY_ME':
-		dbRecords = dbCollection.find({ 'createdBy.discordId': guildMember.user.id, status: 'Draft' }).limit(DB_RECORD_LIMIT);
+		dbRecords = dbBounty.find({ 'createdBy.discordId': guildMember.user.id, status: 'Draft', 'customerId': guildID }).limit(DB_RECORD_LIMIT);
 		break;
 	case 'OPEN':
-		dbRecords = dbCollection.find({ status: 'Open' }).limit(DB_RECORD_LIMIT);
+		dbRecords = dbBounty.find({ status: 'Open', 'customerId': guildID }).limit(DB_RECORD_LIMIT);
 		break;
 	case 'IN_PROGRESS':
-		dbRecords = dbCollection.find({ status: 'In-Progress' }).limit(DB_RECORD_LIMIT);
+		dbRecords = dbBounty.find({ status: 'In-Progress', 'customerId': guildID }).limit(DB_RECORD_LIMIT);
 		break;
 	default:
 		Log.info('invalid list-type');

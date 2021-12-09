@@ -32,12 +32,9 @@ To get setup, please follow these guidelines:
 
 ## Clone the repo to local
 
-1. Create a new feature branch from the dev branch (`docs/<name>`, `feature/<name>`, `release/<name>`, `hotfix/<name>`).
+1. Create a new feature branch from the develop branch (`docs/<name>`, `feature/<name>`, `release/<name>`, `hotfix/<name>`).
 2. Copy the `.env.template` file and name it `.env`;
-3. Request the test Notion token and MongoDB URI from one of the repo
-   maintainers, copy your bot's token (found under the bot tab in the
-   developer's portal) and replace the relevant values in your copied .env
-   file, making sure to update the file name where it is required in `app.js`
+3. Set `.env` vars laid out in `INSTALL.md`
 4. `yarn start` will run the prestart script to get everything installed and running.
 5. Run your bot and test your connections.
 6. Whenever you're ready for a pull request, open a pr with `dev` branch.
@@ -58,3 +55,10 @@ conflicts and failed workflows, the better.
 Once the branch is ready to be merged, push it to the repo and create a PR
 to the dev branch. From this point, it will follow the details set out in
 WORKFLOW.md.
+
+## Troubleshoot
+
+If there are problems with the build, remove your node_modules and run `yarn`.
+If the problem with the build persists, remove your node_modules and yarn.lock and run `yarn`.
+Sample command to accomplish this:
+`rm -rf node_modules && rm -rf yarn.lock && yarn`

@@ -65,7 +65,7 @@ const BountyUtils = {
 	},
 
 	async validateReward(guildMember: GuildMember, reward: BountyReward): Promise<void> {
-		const ALLOWED_CURRENCIES = ['BANK', 'ETH', 'BTC', 'USDC', 'USDT', 'TempCity'];
+		const ALLOWED_CURRENCIES = ['BANK', 'ETH', 'BTC', 'USDC', 'USDT', 'TempCity', 'gOHM', 'LUSD'];
 		const allowedRegex = new RegExp(ALLOWED_CURRENCIES.join('|'), 'i');
 		const MAXIMUM_REWARD = 100000000.00;
 
