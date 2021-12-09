@@ -79,15 +79,9 @@ export default class Bounty extends SlashCommand {
 							required: false,
 						},
 						{
-							name: 'role',
-							type: CommandOptionType.ROLE,
-							description: 'What role(s) would you like to restrict this bounty to?',
-							required: false,
-						},
-						{
-							name: 'user',
-							type: CommandOptionType.USER,
-							description: 'What user(s) would you like to restrict this bounty to?',
+							name: 'gate',
+							type: CommandOptionType.MENTIONABLE,
+							description: 'Select a user or role that will have permissions to claim this bounty',
 							required: false,
 						},
 					],
@@ -258,8 +252,7 @@ export default class Bounty extends SlashCommand {
 				amountWithoutScale: reward.replace('.', ''),
 			},
 			copies: copies,
-			users: [ctxOptions.user],
-			roles: [ctxOptions.role],
+			gate: [ctxOptions.gate],
 		};
 	}
 }
