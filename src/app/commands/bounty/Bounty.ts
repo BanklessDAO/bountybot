@@ -202,7 +202,7 @@ export default class Bounty extends SlashCommand {
 				command = DeleteBounty(guildMember, ctx.options.delete['bounty-id'], ctx.guildID);
 				break;
 			case 'list':
-				command = ListBounty(guildMember, ctx.options.list['list-type']);
+				command = ListBounty(guildMember, ctx.options.list['list-type'], ctx.guildID);
 				break;
 			case 'submit':
 				command = SubmitBounty(guildMember, ctx.options.submit['bounty-id'], 
