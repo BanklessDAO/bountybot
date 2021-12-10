@@ -148,15 +148,32 @@ export default async (guildMember: GuildMember, params: BountyCreateNew, guildID
 		}],
 	};
 
-	if (newBounty.users) {
-		const guildMember = await ServiceUtils.getGuildMemberFromUserId(newBounty.users[0], guildID);
-		messageOptions.embeds[0].fields.push(
-			{ name: 'Users for', value: guildMember.user.tag, inline: false })
-	}
+	let isUser = true;
+	let isRole = true;
 
-	if (newBounty.roles) {
-		const role = await ServiceUtils.getRoleFromRoleId(newBounty.roles[0], guildID);
-		messageOptions.embeds[0].fields.push({ name: 'Roles for', value: role.name, inline: false })
+	if(newBounty.gate) {
+		try {
+			const guildMember = await ServiceUtils.getGuildMemberFromUserId(newBounty.gate[0], guildID);
+			messageOptions.embeds[0].fields.push(
+				{ name: 'Gated to', value: guildMember.user.tag, inline: false })
+		}
+		catch (error) {
+			isUser = false;
+			Log.info(`Gate ${newBounty.gate} is not a User`);
+		}
+
+		try {
+			const role = await ServiceUtils.getRoleFromRoleId(newBounty.gate[0], guildID);
+			messageOptions.embeds[0].fields.push({ name: 'Gated to', value: role.name, inline: false })
+		}
+		catch (error) {
+			isRole = false;
+			Log.info(`Gate ${newBounty.gate} is not a Role`);
+		}
+
+		if(! (isUser || isRole) ) {
+			throw new ValidationError('Please gate this bounty to a user or role.');
+		}
 	}
 
 	await guildMember.send('Thank you! Does this look right?');
@@ -172,7 +189,7 @@ export default async (guildMember: GuildMember, params: BountyCreateNew, guildID
 
 export const generateBountyRecord = (bountyParams: BountyCreateNew, guildMember: GuildMember): any => {
 	const currentDate = (new Date()).toISOString();
-	return {
+	let bountyRecord : any = {
 		customerId: bountyParams.customerId,
 		//TODO can we migrate from customer_id?
 		customer_id: bountyParams.customer_id,
@@ -199,9 +216,13 @@ export const generateBountyRecord = (bountyParams: BountyCreateNew, guildMember:
 		],
 		status: 'Draft',
 		dueAt: bountyParams.dueAt.toISOString(),
-		users: bountyParams.users ? bountyParams.users : null,
-		roles: bountyParams.roles ? bountyParams.roles : null
 	};
+
+	if(bountyParams.gate) {
+		bountyRecord.gate = bountyParams.gate
+	}
+
+	return bountyRecord;
 };
 
 const handleBountyReaction = (message: Message, guildMember: GuildMember, guildID: string, bountyIds: string[]): Promise<any> => {

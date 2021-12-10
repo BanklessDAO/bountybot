@@ -35,15 +35,13 @@ export const claimBountyForValidId = async (guildMember: GuildMember,
 		return guildMember.send({ content: `Sorry bounty is not Open. ${envUrls.BOUNTY_BOARD_URL}${bountyId}` });
 	}
 
+	//Snowflakes are unique. Thus checking for inclusion as a user id or role id suffices for the check for gating.
 	let isAllowlistedUser = true;
 	let isAllowlistedRole = true;
 
-	if (dbBountyResult.users) {
-		isAllowlistedUser = dbBountyResult.users.indexOf(guildMember.user.id) > -1;
-	}
-
-	if (dbBountyResult.roles) {
-		if (! ServiceUtils.hasSomeRole(guildMember, dbBountyResult.roles)) {
+	if (dbBountyResult.gate) {
+		isAllowlistedUser = dbBountyResult.gate.indexOf(guildMember.user.id) > -1;
+		if (! ServiceUtils.hasSomeRole(guildMember, dbBountyResult.gate)) {
 			isAllowlistedRole = false;
 		}
 	}

@@ -35,10 +35,15 @@ export default class implements DiscordEvent {
 				return;
 			}
 
+			if(reaction.message.author.id !== reaction.client.user.id) {
+				Log.info('Message Reaction Processing Stopped. Message author is not this bot');
+				return;
+			}
+
 			const db: Db = await MongoDbUtils.connect(constants.DB_NAME_BOUNTY_BOARD);
-			const dbAdmin = db.collection(constants.DB_COLLECTION_CUSTOMERS);
+			const dbCustomers = db.collection(constants.DB_COLLECTION_CUSTOMERS);
 		
-			const dbCustomerResult: CustomerCollection = await dbAdmin.findOne({
+			const dbCustomerResult: CustomerCollection = await dbCustomers.findOne({
 				customerId: reaction.message.guild.id,
 			});
 

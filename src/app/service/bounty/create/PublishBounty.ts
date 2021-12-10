@@ -8,6 +8,7 @@ import { BountyCollection } from '../../../types/bounty/BountyCollection';
 import { CustomerCollection } from '../../../types/bounty/CustomerCollection';
 import Log from '../../../utils/Log';
 import MongoDbUtils from '../../../utils/MongoDbUtils';
+import ValidationError from '../../../errors/ValidationError';
 
 export default async (guildMember: GuildMember, bountyId: string, guildID: string): Promise<any> => {
 	await BountyUtils.validateBountyId(guildMember, bountyId);
@@ -98,15 +99,33 @@ export const generateEmbedMessage = async (dbBounty: BountyCollection, newStatus
 		},
 	};
 
-	if (dbBounty.users) {
-		const guildMember = await ServiceUtils.getGuildMemberFromUserId(dbBounty.users[0], guildID);
-		messageEmbedOptions.fields.push(
-			{ name: 'Users for', value: guildMember.user.tag, inline: false })
-	}
+	let isUser = true;
+	let isRole = true;
 
-	if (dbBounty.roles) {
-		const role = await ServiceUtils.getRoleFromRoleId(dbBounty.roles[0], guildID);
-		messageEmbedOptions.fields.push({ name: 'Roles for', value: role.name, inline: false })
+	if(dbBounty.gate) {
+		try {
+			const guildMember = await ServiceUtils.getGuildMemberFromUserId(dbBounty.gate[0], guildID);
+			messageEmbedOptions.fields.push(
+				{ name: 'Gated to', value: guildMember.user.tag, inline: false })
+		}
+		catch (error) {
+			isUser = false;
+			Log.info(`Publishing: Gate ${dbBounty.gate} is not a User`);
+		}
+
+		try {
+			const role = await ServiceUtils.getRoleFromRoleId(dbBounty.gate[0], guildID);
+			messageEmbedOptions.fields.push({ name: 'Gated to', value: role.name, inline: false })
+		}
+		catch (error) {
+			isRole = false;
+			Log.info(`Publishing: Gate ${dbBounty.gate} is not a Role`);
+		}
+
+		if(! (isUser || isRole) ) {
+			Log.info(`Publishing bounty failed. Not gated to user or role`)
+			throw new ValidationError('Please gate this bounty to a user or role.');
+		}
 	}
 
 	return messageEmbedOptions;
