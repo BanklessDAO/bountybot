@@ -148,17 +148,6 @@ export default async (guildMember: GuildMember, params: BountyCreateNew, guildID
 		}],
 	};
 
-	// if (newBounty.users) {
-	// 	const guildMember = await ServiceUtils.getGuildMemberFromUserId(newBounty.users[0], guildID);
-	// 	messageOptions.embeds[0].fields.push(
-	// 		{ name: 'Users for', value: guildMember.user.tag, inline: false })
-	// }
-
-	// if (newBounty.roles) {
-	// 	const role = await ServiceUtils.getRoleFromRoleId(newBounty.roles[0], guildID);
-	// 	messageOptions.embeds[0].fields.push({ name: 'Gated for', value: role.name, inline: false })
-	// }
-
 	let isUser = true;
 	let isRole = true;
 
