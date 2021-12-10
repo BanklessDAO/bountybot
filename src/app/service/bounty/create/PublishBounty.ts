@@ -122,7 +122,7 @@ export const generateEmbedMessage = async (dbBounty: BountyCollection, newStatus
 			Log.info(`Publishing: Gate ${dbBounty.gate} is not a Role`);
 		}
 
-		if(! isUser || isRole ) {
+		if(! (isUser || isRole) ) {
 			Log.info(`Publishing bounty failed. Not gated to user or role`)
 			throw new ValidationError('Please gate this bounty to a user or role.');
 		}

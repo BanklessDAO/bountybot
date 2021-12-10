@@ -182,7 +182,7 @@ export default async (guildMember: GuildMember, params: BountyCreateNew, guildID
 			Log.info(`Gate ${newBounty.gate} is not a Role`);
 		}
 
-		if(! isUser || isRole ) {
+		if(! (isUser || isRole) ) {
 			throw new ValidationError('Please gate this bounty to a user or role.');
 		}
 	}
