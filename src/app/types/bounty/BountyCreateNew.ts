@@ -9,4 +9,6 @@ export type BountyCreateNew = {
 	reward: BountyReward,
 	dueAt?: Date,
 	copies: number,
+	users?: string[],
+	roles?: string[]
 };

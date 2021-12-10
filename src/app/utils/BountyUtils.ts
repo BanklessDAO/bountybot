@@ -1,6 +1,5 @@
 import { AwaitMessagesOptions, DMChannel, GuildMember, Message, TextChannel } from 'discord.js';
 import { BountyReward } from '../types/bounty/BountyReward';
-import channelIds from '../service/constants/channelIds';
 import ValidationError from '../errors/ValidationError';
 import { URL } from 'url';
 import envUrls from '../service/constants/envUrls';
@@ -8,7 +7,7 @@ import BountyMessageNotFound from '../errors/BountyMessageNotFound';
 import ServiceUtils from './ServiceUtils';
 import Log, { LogUtils } from './Log';
 import { Db } from 'mongodb';
-import constants from '../service/constants/constants'
+import constants from '../service/constants/constants';
 import { CustomerCollection } from '../types/bounty/CustomerCollection';
 
 /**
@@ -160,14 +159,12 @@ const BountyUtils = {
 		Log.info(`found bounty ${bountyId} in db`);
 	},
 
-	async getBountyMessage(db: Db, guildMember: GuildMember, 
-		bountyMessageId: string, guildID: string, message?: Message
-		): Promise<Message> {
-
+	async getBountyMessage(db: Db, guildMember: GuildMember,
+		bountyMessageId: string, guildID: string, message?: Message): Promise<Message> {
 		const dbCollectionCustomers = db.collection(constants.DB_COLLECTION_CUSTOMERS);
 		if (message == null) {
 			const dbCustomerResult: CustomerCollection = await dbCollectionCustomers.findOne({
-				customerId: guildID
+				customerId: guildID,
 			});
 			const bountyChannel: TextChannel = await guildMember.guild.channels.fetch(dbCustomerResult.bountyChannel) as TextChannel;
 
@@ -198,15 +195,15 @@ const BountyUtils = {
 
 		if(message.author.bot) {
 			throw new ValidationError(
-				`Detected bot response to last message! The previous bounty has been discarded.\n` +
-				`Currently, you can only run one Bounty create command at once.\n` + 
-				`Be sure to check your DMs for any messages from Bountybot.\n` +
-				`Please reach out to your favorite Bounty Board representative with any questions.\n`
+				'Detected bot response to last message! The previous bounty has been discarded.\n' +
+				'Currently, you can only run one Bounty create command at once.\n' +
+				'Be sure to check your DMs for any messages from Bountybot.\n' +
+				'Please reach out to your favorite Bounty Board representative with any questions.\n',
 			);
 		}
 
 		return messageText;
-	}
+	},
 };
 
 export default BountyUtils;

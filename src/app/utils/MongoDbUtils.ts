@@ -19,7 +19,7 @@ const MongoDbUtils = {
 				useNewUrlParser: true,
 				useUnifiedTopology: true,
 			};
-			Log.debug(`Connection URI: ${constants.MONGODB_URI_PARTIAL + database}`)
+			Log.debug(`Connection URI: ${constants.MONGODB_URI_PARTIAL + database}`);
 			const mongoClient = await MongoClient.connect(constants.MONGODB_URI_PARTIAL + database, options);
 			MongoDbUtils.state.clientMap.set(database, mongoClient);
 			MongoDbUtils.state.dbMap.set(database, mongoClient.db(database));

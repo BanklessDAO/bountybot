@@ -34,7 +34,7 @@ export const finalizeBounty = async (guildMember: GuildMember, bountyId: string,
 		Log.info(`${bountyId} bounty is not drafted`);
 		return guildMember.send({ content: 'Sorry bounty is not drafted.' });
 	}
-	const messageOptions: MessageEmbedOptions = generateEmbedMessage(dbBountyResult, 'Open');
+	const messageOptions: MessageEmbedOptions = await generateEmbedMessage(dbBountyResult, 'Open', guildID);
 
 	const bountyChannel: TextChannel = await guildMember.guild.channels.fetch(dbCustomerResult.bountyChannel) as TextChannel;
 	const bountyMessage: Message = await bountyChannel.send({ embeds: [messageOptions] });
@@ -67,12 +67,12 @@ export const addPublishReactions = (message: Message): void => {
 	message.reactions.removeAll();
 	message.react('🏴');
 	message.react('🔄');
-	message.react('📝');
+	//message.react('📝');
 	message.react('❌');
 };
 
-export const generateEmbedMessage = (dbBounty: BountyCollection, newStatus: string): MessageEmbedOptions => {
-	return {
+export const generateEmbedMessage = async (dbBounty: BountyCollection, newStatus: string, guildID: string): Promise<MessageEmbedOptions> => {
+	let messageEmbedOptions: MessageEmbedOptions = {
 		color: 1998388,
 		title: dbBounty.title,
 		url: (envUrls.BOUNTY_BOARD_URL + dbBounty._id.toHexString()),
@@ -90,8 +90,24 @@ export const generateEmbedMessage = (dbBounty: BountyCollection, newStatus: stri
 			{ name: 'Created by', value: dbBounty.createdBy.discordHandle, inline: true },
 		],
 		timestamp: new Date().getTime(),
+		// footer: {
+		// 	text: '🏴 - claim | 🔄 - refresh | 📝 - edit | ❌ - delete',
+		// },
 		footer: {
-			text: '🏴 - claim | 🔄 - refresh | 📝 - edit | ❌ - delete',
+			text: '🏴 - claim | 🔄 - refresh | ❌ - delete',
 		},
 	};
+
+	if (dbBounty.users) {
+		const guildMember = await ServiceUtils.getGuildMemberFromUserId(dbBounty.users[0], guildID);
+		messageEmbedOptions.fields.push(
+			{ name: 'Users for', value: guildMember.user.tag, inline: false })
+	}
+
+	if (dbBounty.roles) {
+		const role = await ServiceUtils.getRoleFromRoleId(dbBounty.roles[0], guildID);
+		messageEmbedOptions.fields.push({ name: 'Roles for', value: role.name, inline: false })
+	}
+
+	return messageEmbedOptions;
 };
