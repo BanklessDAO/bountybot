@@ -241,7 +241,8 @@ export default class Bounty extends SlashCommand {
 		const copies = (ctxOptions.copies == null || ctxOptions.copies <= 0) ? 1 : ctxOptions.copies;
 		let scale = reward.split('.')[1]?.length;
 		scale = (scale != null) ? scale : 0;
-		return {
+		let params: BountyCreateNew = 
+		{
 			customerId: guild,
 			customer_id: guild,
 			title: ctxOptions.title,
@@ -252,7 +253,12 @@ export default class Bounty extends SlashCommand {
 				amountWithoutScale: reward.replace('.', ''),
 			},
 			copies: copies,
-			gate: [ctxOptions.gate],
 		};
+
+		if (ctxOptions.gate) {
+			params.gate = [ctxOptions.gate];
+		}
+
+		return params;
 	}
 }
