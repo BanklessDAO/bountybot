@@ -130,7 +130,7 @@ export default async (guildMember: GuildMember, params: BountyCreateNew, guildID
 			description: newBounty.description,
 			fields: [
 				{ name: 'HashId', value: listOfBountyIds[0], inline: false },
-				{ name: 'Reward', value: BountyUtils.formatBountyAmount(newBounty.reward.amount, newBounty.reward.scale) + ' ' + newBounty.reward.currency.toUpperCase(), inline: true },
+				{ name: 'Reward', value: newBounty.reward.amount + ' ' + newBounty.reward.currency.toUpperCase(), inline: true },
 				{ name: 'Status', value: 'Open', inline: true },
 				{ name: 'Deadline', value: ServiceUtils.formatDisplayDate(newBounty.dueAt), inline: true },
 				{ name: 'Criteria', value: newBounty.criteria.toString() },
