@@ -11,7 +11,7 @@ import Log, { LogUtils } from '../../../utils/Log';
 import discordServerIds from '../../../service/constants/discordServerIds';
 import { CustomerCollection } from '../../../types/bounty/CustomerCollection';
 import MongoDbUtils from '../../../utils/MongoDbUtils';
-import { Db, Int32 } from 'mongodb';
+import { Db, Int32, Double } from 'mongodb';
 import constants from '../../constants/constants';
 
 export default async (guildMember: GuildMember, params: BountyCreateNew, guildID: string): Promise<any> => {
@@ -164,8 +164,9 @@ export const generateBountyRecord = (bountyParams: BountyCreateNew, guildMember:
 		criteria: bountyParams.criteria,
 		reward: {
 			currency: bountyParams.reward.currencySymbol,
-			amount: new Int32(bountyParams.reward.amount),
+			amount: new Double(bountyParams.reward.amount),
 			scale: new Int32(bountyParams.reward.scale),
+			amountWithoutScale: new Int32(bountyParams.reward.amountWithoutScale)
 		},
 		createdBy: {
 			discordHandle: guildMember.user.tag,
