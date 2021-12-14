@@ -22,7 +22,7 @@ export default class Bounty extends SlashCommand {
 		super(creator, {
 			name: 'bounty',
 			description: 'List, create, claim, delete, and mark bounties complete',
-			//TODO: make this dynamic
+			//TODO: make this dynamic?
 			guildIDs: [discordServerIds.banklessDAO,
 				discordServerIds.discordBotGarage,
 				discordServerIds.bountyBoardBotServer,
@@ -76,6 +76,12 @@ export default class Bounty extends SlashCommand {
 							name: 'copies',
 							type: CommandOptionType.INTEGER,
 							description: 'How many bounties should be published? (level 3+, max 100)',
+							required: false,
+						},
+						{
+							name: 'gate',
+							type: CommandOptionType.MENTIONABLE,
+							description: 'Select a user or role that will have permissions to claim this bounty',
 							required: false,
 						},
 					],
@@ -235,7 +241,8 @@ export default class Bounty extends SlashCommand {
 		const copies = (ctxOptions.copies == null || ctxOptions.copies <= 0) ? 1 : ctxOptions.copies;
 		let scale = reward.split('.')[1]?.length;
 		scale = (scale != null) ? scale : 0;
-		return {
+		let params: BountyCreateNew = 
+		{
 			customerId: guild,
 			customer_id: guild,
 			title: ctxOptions.title,
@@ -247,5 +254,11 @@ export default class Bounty extends SlashCommand {
 			},
 			copies: copies,
 		};
+
+		if (ctxOptions.gate) {
+			params.gate = [ctxOptions.gate];
+		}
+
+		return params;
 	}
 }

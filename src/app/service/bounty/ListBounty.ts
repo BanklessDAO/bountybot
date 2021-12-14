@@ -39,14 +39,14 @@ export default async (guildMember: GuildMember, listType: string, guildID: strin
 	if (!await dbRecords.hasNext()) {
 		return guildMember.send({ content: 'We couldn\'t find any bounties!' });
 	}
-	return sendMultipleMessages(guildMember, dbRecords);
+	return sendMultipleMessages(guildMember, dbRecords, guildID);
 };
 
-const sendMultipleMessages = async (guildMember: GuildMember, dbRecords: Cursor): Promise<any> => {
+const sendMultipleMessages = async (guildMember: GuildMember, dbRecords: Cursor, guildID: string): Promise<any> => {
 	const listOfBounties = [];
 	while (listOfBounties.length < 10 && await dbRecords.hasNext()) {
 		const record: BountyCollection = await dbRecords.next();
-		const messageOptions: MessageEmbedOptions = generateEmbedMessage(record, record.status);
+		const messageOptions: MessageEmbedOptions = await generateEmbedMessage(record, record.status, guildID);
 		listOfBounties.push(messageOptions);
 	}
 	await (guildMember.send({ embeds: listOfBounties }));

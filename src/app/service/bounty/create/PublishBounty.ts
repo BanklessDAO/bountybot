@@ -8,6 +8,7 @@ import { BountyCollection } from '../../../types/bounty/BountyCollection';
 import { CustomerCollection } from '../../../types/bounty/CustomerCollection';
 import Log from '../../../utils/Log';
 import MongoDbUtils from '../../../utils/MongoDbUtils';
+import ValidationError from '../../../errors/ValidationError';
 
 export default async (guildMember: GuildMember, bountyId: string, guildID: string): Promise<any> => {
 	await BountyUtils.validateBountyId(guildMember, bountyId);
@@ -34,7 +35,7 @@ export const finalizeBounty = async (guildMember: GuildMember, bountyId: string,
 		Log.info(`${bountyId} bounty is not drafted`);
 		return guildMember.send({ content: 'Sorry bounty is not drafted.' });
 	}
-	const messageOptions: MessageEmbedOptions = generateEmbedMessage(dbBountyResult, 'Open');
+	const messageOptions: MessageEmbedOptions = await generateEmbedMessage(dbBountyResult, 'Open', guildID);
 
 	const bountyChannel: TextChannel = await guildMember.guild.channels.fetch(dbCustomerResult.bountyChannel) as TextChannel;
 	const bountyMessage: Message = await bountyChannel.send({ embeds: [messageOptions] });
@@ -67,12 +68,12 @@ export const addPublishReactions = (message: Message): void => {
 	message.reactions.removeAll();
 	message.react('🏴');
 	message.react('🔄');
-	message.react('📝');
+	//message.react('📝');
 	message.react('❌');
 };
 
-export const generateEmbedMessage = (dbBounty: BountyCollection, newStatus: string): MessageEmbedOptions => {
-	return {
+export const generateEmbedMessage = async (dbBounty: BountyCollection, newStatus: string, guildID: string): Promise<MessageEmbedOptions> => {
+	let messageEmbedOptions: MessageEmbedOptions = {
 		color: 1998388,
 		title: dbBounty.title,
 		url: (envUrls.BOUNTY_BOARD_URL + dbBounty._id.toHexString()),
@@ -90,8 +91,42 @@ export const generateEmbedMessage = (dbBounty: BountyCollection, newStatus: stri
 			{ name: 'Created by', value: dbBounty.createdBy.discordHandle, inline: true },
 		],
 		timestamp: new Date().getTime(),
+		// footer: {
+		// 	text: '🏴 - claim | 🔄 - refresh | 📝 - edit | ❌ - delete',
+		// },
 		footer: {
-			text: '🏴 - claim | 🔄 - refresh | 📝 - edit | ❌ - delete',
+			text: '🏴 - claim | 🔄 - refresh | ❌ - delete',
 		},
 	};
+
+	let isUser = true;
+	let isRole = true;
+
+	if(dbBounty.gate) {
+		try {
+			const guildMember = await ServiceUtils.getGuildMemberFromUserId(dbBounty.gate[0], guildID);
+			messageEmbedOptions.fields.push(
+				{ name: 'Gated to', value: guildMember.user.tag, inline: false })
+		}
+		catch (error) {
+			isUser = false;
+			Log.info(`Publishing: Gate ${dbBounty.gate} is not a User`);
+		}
+
+		try {
+			const role = await ServiceUtils.getRoleFromRoleId(dbBounty.gate[0], guildID);
+			messageEmbedOptions.fields.push({ name: 'Gated to', value: role.name, inline: false })
+		}
+		catch (error) {
+			isRole = false;
+			Log.info(`Publishing: Gate ${dbBounty.gate} is not a Role`);
+		}
+
+		if(! (isUser || isRole) ) {
+			Log.info(`Publishing bounty failed. Not gated to user or role`)
+			throw new ValidationError('Please gate this bounty to a user or role.');
+		}
+	}
+
+	return messageEmbedOptions;
 };

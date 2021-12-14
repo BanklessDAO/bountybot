@@ -16,7 +16,7 @@ import client from '../app';
 import ValidationError from '../errors/ValidationError';
 import roleIDs from '../service/constants/roleIds';
 import discordServerIds from '../service/constants/discordServerIds';
-import Log, { LogUtils } from './Log';
+import { LogUtils } from './Log';
 
 const ServiceUtils = {
 	async getGuildAndMember(ctx: CommandContext): Promise<{ guild: Guild, guildMember: GuildMember }> {
@@ -30,6 +30,16 @@ const ServiceUtils = {
 	async getGuildMemberFromUser(user: User, guildID: string): Promise<GuildMember> {
 		const guild = await client.guilds.fetch(guildID);
 		return await guild.members.fetch(user.id);
+	},
+
+	async getGuildMemberFromUserId(userId: string, guildID: string): Promise<GuildMember> {
+		const guild = await client.guilds.fetch(guildID);
+		return await guild.members.fetch(userId);
+	},
+
+	async getRoleFromRoleId(roleId: string, guildID: string): Promise<Role> {
+		const guild = await client.guilds.fetch(guildID);
+		return await guild.roles.fetch(roleId);
 	},
 
 	async getMembersWithRoles(guild: Guild, roles: string[]): Promise<Collection<Snowflake, GuildMember>> {

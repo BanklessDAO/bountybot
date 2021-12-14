@@ -14,9 +14,11 @@ export interface BountyCollection extends Collection {
 	createdAt: string,
 	dueAt: string,
 	status: string,
+	//TODO: update to Status[]
 	statusHistory: string[],
 	discordMessageId: string,
-	customerId: string
+	customerId: string,
+	gate: string[],
 }
 
 export type UserObject = {
@@ -30,3 +32,8 @@ export type Reward = {
 	amount: Int32,
 	scale: Int32,
 };
+
+export type Status = {
+	status: string,
+	setAt: string,
+}
