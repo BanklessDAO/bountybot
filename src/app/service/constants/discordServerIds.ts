@@ -4,5 +4,6 @@ export default Object.freeze({
 	slinkyPotatoServer: '850840267082563596',
 	bountyBoardBotServer: '905250069463326740',
 	cityDAO: '860356969521217536',
-	lifeTheLifeDAO: '721358849034158104'
+	lifeTheLifeDAO: '721358849034158104',
+	shapeShift: '554694662431178782',
 });
