@@ -75,7 +75,7 @@ export default async (guildMember: GuildMember, params: BountyCreateNew, guildID
 
 	if (params.copies > 1) {
 		const totalReward = params.reward.amount * params.copies;
-		await guildMember.send({ content: `Are you sure you want to publish bounties with a \`total\` reward of \`${totalReward} ${params.reward.currencySymbol}\`? (yes/no)` });
+		await guildMember.send({ content: `Are you sure you want to publish bounties with a \`total\` reward of \`${totalReward} ${params.reward.currencySymbol.toUpperCase()}\`? (yes/no)` });
 		const amountConfirmation: string = await BountyUtils.awaitUserDM(dmChannel, replyOptions);
 		if (!(amountConfirmation == 'yes' || amountConfirmation == 'YES' || amountConfirmation == 'Y' || amountConfirmation == 'Yes')) {
 			return guildMember.send({ content: 'Ok no problem, bounty deleted.' });
@@ -131,7 +131,7 @@ export default async (guildMember: GuildMember, params: BountyCreateNew, guildID
 			description: newBounty.description,
 			fields: [
 				{ name: 'HashId', value: listOfBountyIds[0], inline: false },
-				{ name: 'Reward', value: newBounty.reward.amount + ' ' + newBounty.reward.currency.toUpperCase(), inline: true },
+				{ name: 'Reward', value: newBounty.reward.amount + ' ' + newBounty.reward.currency, inline: true },
 				{ name: 'Status', value: 'Open', inline: true },
 				{ name: 'Deadline', value: ServiceUtils.formatDisplayDate(newBounty.dueAt), inline: true },
 				{ name: 'Criteria', value: newBounty.criteria.toString() },
@@ -198,7 +198,7 @@ export const generateBountyRecord = (bountyParams: BountyCreateNew, guildMember:
 		description: bountyParams.summary,
 		criteria: bountyParams.criteria,
 		reward: {
-			currency: bountyParams.reward.currencySymbol,
+			currency: bountyParams.reward.currencySymbol.toUpperCase(),
 			amount: new Double(bountyParams.reward.amount),
 			scale: new Int32(bountyParams.reward.scale),
 			amountWithoutScale: new Int32(bountyParams.reward.amountWithoutScale)
