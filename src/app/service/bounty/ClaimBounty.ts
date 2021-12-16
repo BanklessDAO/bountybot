@@ -51,6 +51,11 @@ export const claimBountyForValidId = async (guildMember: GuildMember,
 		return guildMember.send({ content: `The creator of this bounty did not allowlist you to claim this bounty. ${envUrls.BOUNTY_BOARD_URL}${bountyId}` });
 	}
 
+	if(guildMember.user.id == dbBountyResult.createdBy.discordId) {
+		 Log.info(`Bounty ${bountyId} tried to be claimed by ${guildMember.user.id}, creator can't claim their own bounties`);
+		 return guildMember.send({ content: `The creator of the bounty isn't allowed to claim the bounty. ${envUrls.BOUNTY_BOARD_URL}${bountyId}` });
+	 }
+
 	const currentDate = (new Date()).toISOString();
 	const writeResult: UpdateWriteOpResult = await dbCollection.updateOne(dbBountyResult, {
 		$set: {
