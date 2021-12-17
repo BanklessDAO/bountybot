@@ -28,7 +28,8 @@ export default class Bounty extends SlashCommand {
 				discordServerIds.bountyBoardBotServer,
 				discordServerIds.cityDAO,
 				discordServerIds.lifeTheLifeDAO,
-				discordServerIds.shapeShift],
+				discordServerIds.shapeShift,
+				discordServerIds.DIMO],
 			options: [
 				{
 					name: 'claim',
