@@ -65,18 +65,20 @@ const BountyUtils = {
 	},
 
 	async validateReward(guildMember: GuildMember, reward: BountyReward): Promise<void> {
-		const ALLOWED_CURRENCIES = ['BANK', 'ETH', 'BTC', 'USDC', 'USDT', 'TempCity', 'gOHM', 'LUSD'];
-		const allowedRegex = new RegExp(ALLOWED_CURRENCIES.join('|'), 'i');
+		const ALLOWED_CURRENCIES = ['BANK', 'ETH', 'BTC', 'USDC', 'USDT', 'TempCity', 'gOHM', 'LUSD', 'FOX', 'oneFOX'];
+		const isValidCurrency = (typeof reward.currencySymbol !== 'undefined') && (ALLOWED_CURRENCIES.find(element => {
+			return element.toLowerCase() === reward.currencySymbol.toLowerCase();
+		}) !== undefined);
 		const MAXIMUM_REWARD = 100000000.00;
 
-		if (!allowedRegex.test(reward.currencySymbol)) {
+		if (!isValidCurrency) {
 			await guildMember.send({
 				content: `<@${guildMember.user.id}>\n` +
-					'- Currently, the accepted currencies are:\n' +
+					'- Specify a valid currency. The accepted currencies are:\n' +
 					`${ALLOWED_CURRENCIES.toString()}\n` +
 					'Please reach out to your favorite Bounty Board representative to expand this list!',
 			});
-			throw new ValidationError('Please try another reward token.');
+			throw new ValidationError('Please specify a valid reward currency.');
 		}
 
 		if (isNaN(reward.amount) || reward.amount < 0 || reward.amount > MAXIMUM_REWARD) {

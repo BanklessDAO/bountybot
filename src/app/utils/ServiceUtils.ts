@@ -134,7 +134,8 @@ const ServiceUtils = {
 		guild.id == discordServerIds.discordBotGarage ||
 		guild.id == discordServerIds.bountyBoardBotServer ||
 		guild.id == discordServerIds.cityDAO ||
-		guild.id == discordServerIds.lifeTheLifeDAO;
+		guild.id == discordServerIds.lifeTheLifeDAO ||
+		guild.id == discordServerIds.shapeShift;
 	},
 	
 	async tryDMUser(guildMember: GuildMember, message: string): Promise<any> {
