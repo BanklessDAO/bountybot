@@ -6,4 +6,6 @@ export default Object.freeze({
 	cityDAO: '860356969521217536',
 	lifeTheLifeDAO: '721358849034158104',
 	shapeShift: '554694662431178782',
+	DIMO: '892438668453740634',
+	banklessBrasil: '875424808194691113'
 });
