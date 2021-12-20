@@ -24,9 +24,10 @@ export default class implements DiscordEvent {
 				guild.id == discordServerIds.discordBotGarage ||
 				guild.id == discordServerIds.bountyBoardBotServer ||
 				guild.id == discordServerIds.cityDAO ||
-				guild.id == discordServerIds.lifeTheLifeDAO || 
-				guild.id == discordServerIds.shapeShift || 
-				guild.id == discordServerIds.DIMO
+				guild.id == discordServerIds.lifeTheLifeDAO ||
+				guild.id == discordServerIds.shapeShift ||
+				guild.id == discordServerIds.DIMO ||
+				guild.id == discordServerIds.banklessBrasil
 				)) {
 				await MongoDbUtils.connect(constants.DB_NAME_BOUNTY_BOARD);
 			}

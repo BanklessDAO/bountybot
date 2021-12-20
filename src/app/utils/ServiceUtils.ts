@@ -136,7 +136,8 @@ const ServiceUtils = {
 		guild.id == discordServerIds.cityDAO ||
 		guild.id == discordServerIds.lifeTheLifeDAO ||
 		guild.id == discordServerIds.shapeShift ||
-		guild.id == discordServerIds.DIMO;
+		guild.id == discordServerIds.DIMO ||
+		guild.id == discordServerIds.banklessBrasil;
 	},
 	
 	async tryDMUser(guildMember: GuildMember, message: string): Promise<any> {
