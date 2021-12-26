@@ -65,8 +65,8 @@ const BountyUtils = {
 	},
 
 	async validateReward(guildMember: GuildMember, reward: BountyReward): Promise<void> {
-		const ALLOWED_CURRENCIES = ['BANK', 'ETH', 'BTC', 'USDC', 'USDT', 'TempCity', 'gOHM', 'LUSD', 'FOX', 'oneFOX'];
-		const isValidCurrency = (typeof reward.currencySymbol !== 'undefined') && (ALLOWED_CURRENCIES.find(element => {
+		const ALLOWED_CURRENCIES = ['BANK', 'ETH', 'BTC', 'USDC', 'USDT', 'TempCity', 'gOHM', 'LUSD', 'FOX', 'oneFOX', 'DIMO', '$DIMO'];
+		const isValidCurrency = ALLOWED_CURRENCIES.find(element => {
 			return element.toLowerCase() === reward.currencySymbol.toLowerCase();
 		}) !== undefined);
 		const MAXIMUM_REWARD = 100000000.00;
