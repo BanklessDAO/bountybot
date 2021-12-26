@@ -68,7 +68,7 @@ const BountyUtils = {
 		const ALLOWED_CURRENCIES = ['BANK', 'ETH', 'BTC', 'USDC', 'USDT', 'TempCity', 'gOHM', 'LUSD', 'FOX', 'oneFOX', 'DIMO', '$DIMO'];
 		const isValidCurrency = ALLOWED_CURRENCIES.find(element => {
 			return element.toLowerCase() === reward.currencySymbol.toLowerCase();
-		}) !== undefined);
+		}) !== undefined;
 		const MAXIMUM_REWARD = 100000000.00;
 
 		if (!isValidCurrency) {
