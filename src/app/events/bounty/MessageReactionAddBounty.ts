@@ -47,7 +47,7 @@ export default async (reaction: MessageReaction, user: User): Promise<any> | nul
 	} else if (reaction.emoji.name === '📮') {
 		Log.info(`${user.tag} attempting to submit bounty ${bountyId}`);
 		// TODO: have bot ask user for details
-		return submitBountyForValidId(guildMember, bountyId, null, null, message.guildId, message).catch(e => LogUtils.logError('failed to submit bounty', e));
+		return submitBountyForValidId(guildMember, bountyId, message.guildId, null, null, message).catch(e => LogUtils.logError('failed to submit bounty', e));
 	} else if (reaction.emoji.name === '✅') {
 		Log.info(`${user.tag} attempting to mark bounty ${bountyId} complete`);
 		return completeBountyForValidId(guildMember, bountyId, message.guildId, message).catch(e => LogUtils.logError('failed to complete bounty', e));
