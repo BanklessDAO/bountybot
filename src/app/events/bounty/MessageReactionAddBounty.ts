@@ -53,7 +53,7 @@ export default async (reaction: MessageReaction, user: User): Promise<any> | nul
 		return completeBountyForValidId(guildMember, bountyId, message.guildId, message).catch(e => LogUtils.logError('failed to complete bounty', e));
 	} else if (reaction.emoji.name === '🆘') {
 		Log.info(`${user.tag} attempting to seek help for bounty ${bountyId}`);
-		return seekHelpValidBountyId(guildMember, bountyId).catch(e => LogUtils.logError('failed to seek help for bounty', e));
+		return seekHelpValidBountyId(guildMember, bountyId, message.guildId).catch(e => LogUtils.logError('failed to seek help for bounty', e));
 	} else if (reaction.emoji.name === '🔄') {
 		Log.info(`${user.tag} attempting to refresh bounty ${bountyId}`);
 		return RefreshBounty(guildMember, bountyId, message).catch(e => LogUtils.logError('failed to refresh bounty', e));
